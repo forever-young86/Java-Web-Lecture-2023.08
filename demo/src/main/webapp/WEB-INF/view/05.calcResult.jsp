@@ -8,6 +8,6 @@
 <body style="margin: 50px;">
 	<h3>단순 계산기</h3>
 	<hr>
-	${a} ${oper} ${b} = ${result}
+	${a} ${op} ${b} = ${result}
 </body>
 </html>
