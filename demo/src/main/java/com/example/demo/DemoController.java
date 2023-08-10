@@ -143,8 +143,17 @@ public class DemoController {
 					 	stack.push(num_);
 				 } else {
 					 String element = stack.pop();
-					 if(element.equals("/"))
-	
+					 if(element.equals("/") || element.equals("*") || element.equals("-") ||element.equals("+")){
+						 stack.push(element);
+						 stack.push(num_);
+					 } else {
+						 num_ = element + num_;
+						 stack.push(num_);
+					 }
+				}
+				 session.setAttribute("stack", stack);
+				 model.addAttribute("eval", getEval(stack));
+			} else if (op_ !=null && !op_.equals("=")) {
 			
 				} else if (op_.equals("=")) {
 					switch(op) {

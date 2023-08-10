@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제안</title>
+    <script>
+        window.onload = function() {
+            const btn1 = document.getElementById('btn1');
+            btn1.addEventListener('click',function(){
+                alert('거절은 거절한다...밤길 조심해라잉~야옹');
+            });
+                
+            btn1.addEventListener('mouseover',function(){
+                const h4 = document.createElement('h4');
+                const textNode = document.createTextNode('신중히 고려하셨습니까?');
+                h4.appendChild(textNode);
+                document.body.appendChild(h4);
+            });
+            btn1.addEventListener('mouseout',function () {
+                const h4 = document.querySelector('h4');
+                document.body.removeChild(h4);
+            });
+        }
+    </script>
+
+</head>
+<body style="margin: 40px; text-align: center;">
+    <h1>결제 요청건</h1>
+    <hr>
+    <h3>Dear 탱크보이</h3>
+    <img src="img/tankboy.jpg" width="500px;">
+    <p>8월 25일 전체 회식 안건 전달</p>
+    <p>점심때 햄버거 시켜주세요</p>
+    <p style="color: red; background-color:yellow ; font-size: x-large;">탱크보이님</p>
+    <h2>예상결제액 : 30만원</h2>
+    <h1>결제해주시겠습니까?</h1>
+    <br>
+
+    <div style="text-align: center;">
+    <button onclick="alert('감사합니다 넙쭉~'); " style="background-color: green; border: none; color: white; text-align: center; font-size: 50px;">Yes</button>
+    <button id="btn1" ; style="background-color: green; border: none; color: white; text-align: center; font-size: 50px;">No</button>
+    </div>
+    
+</body>
+</html>
