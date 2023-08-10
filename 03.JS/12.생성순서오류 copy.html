@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>생성순서 오류</title>
+    <script>
+        document.querySelector('h1').style.color = 'red'; //selector를 쓰면 tag 이름 쓰면 됨, 아이디는 #, 클래스는 . 이 붙으면 됨
+        document.querySelector('h2').style.backgroundColor='yellow'; //body h1, h2가 실행되기전에 script가 먼저 실행되므로, 적용이 안된다.
+    </script>
+</head>
+<body>
+    <h1>Header 1</h1>
+    <h2>Header 2</h2>
+</body>
+</html>

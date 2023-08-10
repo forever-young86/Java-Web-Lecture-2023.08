@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import java.util.Stack;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +13,6 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class DemoController {
-	String a_=null, b_=null, op=null;
-	int a = 0,  b = 0, result = 0;
 	
 	//localhost:8080/demo/index
 		@GetMapping("/index")
@@ -125,38 +125,27 @@ public class DemoController {
 		}
 		
 		@GetMapping("/calculator")
-		public String calculator() {
+		public String calculatorForm(String eval, Model model) {
+			model.addAttribute("eval",eval);
 			return "08.calculator";
 		}
 		
 		@PostMapping("/calculator")
 //HttpServletRequest => 사용자로부터 들어온 요청을 서버에서 생성하여 내용을 파라미터로 get, post로 전달
-		public String calculatorProc(HttpServletRequest req, Model model) {
+		public String calculatorProc(HttpServletRequest req,HttpSession session, Model model) {
 			String num_ = req.getParameter("num");
 			String op_ = req.getParameter("op");
-			String eval = req.getParameter("eval");
-			if (eval == null)
-				eval = "";
-			
-			/**Object obj = session.getAttribute("stack");
-			Stack<Object> stack = (obj == null) ? new Stack<>() : (Stack) obj;**/
+			String obj = session.getAttribute("stack");
+			Stack<String> stack = (obj == null) ? new Stack<>() : (Stack) obj;
 					
 			if (num_ != null) {
-				eval += num_;
-				if (a_ == null) {
-					a_ = num_;
-					a = Integer.parseInt(a_);
-				} else if ( b_ == null) {
-					b_ = num_;
-					b = Integer.parseInt(b_);
-				}
-				model.addAttribute("eval", eval);
-			}else if (op_ != null) {
-				if (op_.equals("C")) {
-					eval = "";
-					a_ = null; b_ =null; op = null;
-					a = 0; b = 0;
-					model.addAttribute("eval", eval);
+				 if (stack.isEmpty()) {
+					 	stack.push(num_);
+				 } else {
+					 String element = stack.pop();
+					 if(element.equals("/"))
+	
+			
 				} else if (op_.equals("=")) {
 					switch(op) {
 					case "+" : result = a + b; break;
