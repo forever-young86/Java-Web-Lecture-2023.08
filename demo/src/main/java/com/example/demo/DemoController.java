@@ -132,17 +132,18 @@ public class DemoController {
 		
 		@PostMapping("/calculator")
 //HttpServletRequest => 사용자로부터 들어온 요청을 서버에서 생성하여 내용을 파라미터로 get, post로 전달
-		public String calculatorProc(HttpServletRequest req,HttpSession session, Model model) {
+		public String calculatorProc(HttpServletRequest req, HttpSession session, Model model) {
 			String num_ = req.getParameter("num");
 			String op_ = req.getParameter("op");
-			String obj = session.getAttribute("stack");
+			Object obj = session.getAttribute("stack");
 			Stack<String> stack = (obj == null) ? new Stack<>() : (Stack) obj;
-					
-			if (num_ != null) {
-				 if (stack.isEmpty()) {
-					 	stack.push(num_);
+					//obj가 null일때 참이면 stack 은 빈칸, 거짓이면 stack 에 obj 들어감
+			if (num_ != null) { //num 이 null 이 아닐때
+				 if (stack.isEmpty()) { //stack 에 비어있으면
+					 	stack.push(num_); //num (입력값) 넣기
 				 } else {
-					 String element = stack.pop();
+					 String element = stack.pop(); //null아니면, 입력된 숫자 보이기
+					 //연산자 기호를 눌렀을때, stack에 기호 넣기
 					 if(element.equals("/") || element.equals("*") || element.equals("-") ||element.equals("+")){
 						 stack.push(element);
 						 stack.push(num_);
@@ -154,27 +155,44 @@ public class DemoController {
 				 session.setAttribute("stack", stack);
 				 model.addAttribute("eval", getEval(stack));
 			} else if (op_ !=null && !op_.equals("=")) {
-			
-				} else if (op_.equals("=")) {
+				if (op_.equals("C")) {
+					if (stack.isEmpty())
+						;
+					else {
+						String s = stack.pop();
+						if (s.length() > 1) {
+							s = s.substring(0, s.length() -1);
+							stack.push(s);
+						}
+					}
+				}else
+					stack.push(op_);
+				session.setAttribute("stack", stack);
+				model.addAttribute("eval",getEval(stack));
+				
+				} else {
+					int result = 0;
+					int num2 = Integer.parseInt(stack.pop());
+					String op = stack.pop();
+					int num1 = Integer.parseInt(stack.pop());
 					switch(op) {
-					case "+" : result = a + b; break;
-					case "-" : result = a - b; break;
-					case "*" : result = a * b; break;
-					case "/" : result = (int) a / b; break;
+					case "+" : result = num1 + num2; break;
+					case "-" : result = num1 - num2; break;
+					case "*" : result = num1 * num2; break;
+					case "/" : result = (int) num1 / num2; break;
 					default: result = 0;
 					}
-					a_ = null; b_ = null; op = null;
-					a = 0; b =0;
-					model.addAttribute("eval", result);
-				} else {
-					eval += " " + op_ + " ";
-					op = op_;
-					model.addAttribute("eval", eval);
-				}
-			}
-			
+					session.removeAttribute("stack");
+					model.addAttribute("eval",result);
+				} 
 			return "08.calculator";
-
+			
+			}
+			String getEval(Stack<String>stack) {
+				String eval = "";
+				for (String s : stack)
+					eval += s + " ";
+				return eval;
 		}
 		
 		
