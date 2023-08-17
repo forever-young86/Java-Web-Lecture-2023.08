@@ -8,10 +8,7 @@
 <html>
 <head>
 	<%@ include file="./common/head.jspf" %>
-	<style>
-		th { text-align: center; width: 14.28%; }
-        td { height: 100px; }
-	</style>
+
 </head>
 <body>
 	<%@ include file="./common/top.jspf" %>
@@ -22,9 +19,25 @@
 			<!-- =================Main================== -->
             <div class = "col-9">
             	<h3><strong>샘플</strong></h3>
-            	<hr>
+            <hr>
+        	<h3><strong>MemberList</strong></h3>
+ 		<table class="table table-bordered text-center">
+		    <thead>
+		      <tr>
+				<tr><th>아이디</th><th>이름</th><th>주소</th><th>국가</th></tr>
+				<c:forEach var="member" items="${memberList}">
+                   <tr>
+					<td class="col-3">${member.id}</td>
+					<td class="col-3">${member.name}</td>
+					<td class="col-3">${member.addr.city}</td>
+					<td class="col-3">${member.addr.country}</td>
+				</tr>
+				</c:forEach>
+			</table>
+
             </div>
             <!-- =================Main================== -->
+
         </div>
     </div>	
 	
