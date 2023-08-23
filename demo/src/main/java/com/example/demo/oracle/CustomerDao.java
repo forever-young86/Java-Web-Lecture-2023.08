@@ -78,4 +78,91 @@ public class CustomerDao {
 		}
 		return list;
 	}
+	
+	public List<Customer> getCustomerListByAddress(String addr){
+		Connection conn = myConnection();
+		String sql = "select * from customer where address like ?";
+		List<Customer> list = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%" + addr + "%");
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) { //아래에, 변수 생성안하고 바로 객체생성할때 넣어도 된다
+				Customer c = new Customer(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+				list.add(c);
+			}
+			rs.close(); pstmt.close(); conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public List<Customer> getCustomerListByLastname(String field, String query){ //field 와 query를 사용
+		Connection conn = myConnection();
+		String sql = "select * from customer where " + field + " like ?"; //SQL 구문에 filed를 넣는다
+		List<Customer> list = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%" + query + "%"); //query가 들어간다
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Customer c = new Customer(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+				list.add(c);
+			}
+			rs.close(); pstmt.close(); conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	 public void insertCustomer(Customer c) { //return값이 없으므로 void를 쓴다
+		 Connection conn = myConnection();
+		 String sql = "insert into customer values (?, ?, ?, ?)";
+		 try {
+			 PreparedStatement pstmt = conn.prepareStatement(sql);
+			 pstmt.setInt(1, c.getCustId()); //Customer를 c로 만들었으니까 c.get으로 불러온다
+			 pstmt.setString(2, c.getName());
+			 pstmt.setString(3, c.getAddr());
+			 pstmt.setString(4, c.getPhone());
+			 pstmt.executeUpdate(); //executeUpdate(): Insert,Update,Delete일때 사용
+			 
+			 pstmt.close(); conn.close(); //연것 닫기, ResultSet은사용하지 않았다.
+		 } catch(Exception e) {
+			 e.printStackTrace();
+		 }
+	 }
+	 
+	 public void updateCustomer(Customer c) {
+		 Connection conn = myConnection();
+		 String sql = "update customer set name=?, address=?, phone=? where custid=?";
+		 try {
+			 PreparedStatement pstmt = conn.prepareStatement(sql);
+			 pstmt.setString(1, c.getName());
+			 pstmt.setString(2, c.getAddr());
+			 pstmt.setString(3, c.getPhone());
+			 pstmt.setInt(4, c.getCustId());
+			 pstmt.executeUpdate();
+			 
+			 pstmt.close(); conn.close();
+		 } catch(Exception e) {
+			 e.printStackTrace();
+		 }
+	 }
+	 
+	 public void deleteCustomer(int custId) { //custId로 삭제를 진행
+		 Connection conn = myConnection();
+		 String sql = "delete from customer where custid=?";
+		 try {
+			 PreparedStatement pstmt = conn.prepareStatement(sql);
+			 pstmt.setInt(1, custId);
+			 pstmt.executeUpdate();
+			 
+			 pstmt.close(); conn.close();
+		 } catch(Exception e) {
+			 e.printStackTrace();
+		 }
+	 }
+
 }

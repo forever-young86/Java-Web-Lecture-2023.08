@@ -6,7 +6,7 @@ public class Book {
 	private String publisher;
 	private int price;
 	
-	public Book() {	}
+	public Book() {	} //기본생성자
 
 	public Book(int bookid, String bookname, String publisher, int price) {
 		this.bookid = bookid;
