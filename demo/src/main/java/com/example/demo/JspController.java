@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
-@Controller //컨트롤러 만들때 제일 먼저 import 해야함
-@RequestMapping("/jsp")
+//@Controller //컨트롤러 만들때 제일 먼저 import 해야함
+//@RequestMapping("/jsp")
 public class JspController {
 
 	@GetMapping("/sample")

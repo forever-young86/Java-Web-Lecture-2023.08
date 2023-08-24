@@ -12,18 +12,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BlogDao {
-	/*
-	 * @Value("${spring.datasource.url}") private String url;
-	 * 
-	 * @Value("${spring.datasource.username}") private String username;
-	 * 
-	 * @Value("${spring.datasource.password=hmpass}") private String password;
-	 */
+public class BlogDao { //application.properties에 있어서 정보가 노출되지 않음
+	 @Value("${spring.datasource.url}") private String url;
+	 @Value("${spring.datasource.username}") private String username;
+	 @Value("${spring.datasource.password}") private String password;
 	
-	private String url = "jdbc:oracle:thin:@localhost:1521:xe";
-	private String username = "hmuser";
-	private String password = "hmpass";
+//	private String url = "jdbc:oracle:thin:@localhost:1521:xe";
+//	private String username = "hmuser";
+//	private String password = "hmpass";
 	
 	public Blog getBlog(int bid) {
 		String sql = "select * from blog where bid = ?";
