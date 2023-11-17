@@ -1,5 +1,8 @@
 package com.human.sample.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -7,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -17,6 +21,39 @@ import com.human.sample.service.UserService;
 @RequestMapping("/user")
 public class UserController {
 	@Autowired private UserService userService;
+
+	@GetMapping("/update/{uid}")
+	public String updateForm(@PathVariable String uid) {
+		return"";
+	}
+	
+	@PostMapping("/update/{uid}")
+	public String updateProc(@PathVariable String uid) {
+		return"";
+	}
+	
+	@GetMapping("/delete/{uid}")
+	public String delete(@PathVariable String uid) {
+		System.out.println(uid);
+		return "redirect:/home";
+	}
+	
+	@GetMapping("/list/{page}")		// {page}: /sample/user/list/1 <= page숫자를 줌
+	public String list(@PathVariable int page, HttpSession session, Model model) {
+		List<User> list = userService.getUserList(page);
+		model.addAttribute("userList", list);
+		
+		int totalUsers = userService.getUserCount();
+		int totalPages = (int) Math.ceil((double)totalUsers / userService.RECORDS_PER_PAGE);
+		List<String> pageList = new ArrayList<>();
+		for (int i=1; i<=totalPages; i++)
+			pageList.add(String.valueOf(i));
+		model.addAttribute("pageList", pageList);
+		session.setAttribute("currentUserPage", page);
+		
+		return "user/list";
+	}
+	
 	
 	@GetMapping("/login")
 	public String loginForm() {
@@ -27,7 +64,7 @@ public class UserController {
 	public String loginProc(String uid, String pwd, HttpSession session, Model model) {
 		int result = userService.login(uid, pwd);
 		if (result == userService.CORRECT_LOGIN) {
-			session.setAttribute("sessUid", uid); 		// uid = user.getUid()
+			session.setAttribute("sessUid", uid);		// uid = user.getUid()
 			User user = userService.getUser(uid);
 			session.setAttribute("sessUname", user.getUname());
 			session.setAttribute("sessEmail", user.getEmail());
@@ -38,7 +75,7 @@ public class UserController {
 		} else if (result == userService.WRONG_PASSWORD) {
 			model.addAttribute("msg", "패스워드 입력이 잘못되었습니다.");
 			model.addAttribute("url", "/sample/user/login");
-		} else {	// UID_NOT_EXIST 인 case
+		} else {		// UID_NOT_EXIST
 			model.addAttribute("msg", "ID 입력이 잘못되었습니다.");
 			model.addAttribute("url", "/sample/user/login");
 		}
@@ -58,12 +95,12 @@ public class UserController {
 	
 	@PostMapping("/register")
 	public String registerProc(String uid, String pwd, String pwd2, 
-								String uname, String email, Model model){
+								String uname, String email, Model model) {
 		if (userService.getUser(uid) != null) {
-			model.addAttribute("msg", "사용자 ID 중복되었습니다.");
+			model.addAttribute("msg", "사용자 ID가 중복되었습니다.");
 			model.addAttribute("url", "/sample/user/register");
 		}
-		if (pwd.equals(pwd2) && pwd.length() >= 4) {	// pwd와 pwd2가 같고, 길이가 4이상이면 
+		if (pwd.equals(pwd2) && pwd.length() >= 4) {	// pwd와 pwd2가 같고, 길이가 4이상이면
 			String hashedPwd = BCrypt.hashpw(pwd, BCrypt.gensalt());
 			User user = new User(uid, hashedPwd, uname, email);
 			userService.insertUser(user);
